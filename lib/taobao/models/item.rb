@@ -2,9 +2,6 @@ require 'taobao/model'
 
 module Taobao
   class Item < Model
-    def self.elm_name
-      "item"
-    end
 
     def self.attr_names
       [
@@ -30,6 +27,7 @@ module Taobao
        :is_ex,
        :is_taobao,
        :is_virtural,
+       :item_imgs,
        :list_time,
        :location,
        :modified,
@@ -58,5 +56,14 @@ module Taobao
       attr_accessor a
     end
 
+    class << self
+      def get(id,options)
+        options.merge!({:num_iid=> id, :method => 'taobao.item.get'})
+        obj = Item.invoke('get',options)
+        item = Item.new
+        item.fill_fields(obj['item_get_response']['item'])
+        item
+      end
+    end
   end
 end
